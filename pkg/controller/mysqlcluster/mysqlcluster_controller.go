@@ -18,6 +18,7 @@ package mysqlcluster
 
 import (
 	"context"
+	"github.com/kuberlogic/operator/modules/klevent"
 	"reflect"
 
 	"github.com/presslabs/controller-util/syncer"
@@ -59,10 +60,11 @@ func Add(mgr manager.Manager) error {
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) reconcile.Reconciler {
 	return &ReconcileMysqlCluster{
-		Client:   mgr.GetClient(),
-		scheme:   mgr.GetScheme(),
-		recorder: mgr.GetEventRecorderFor(controllerName),
-		opt:      options.GetOptions(),
+		Client:      mgr.GetClient(),
+		kleventCtrl: klevent.NewController(),
+		scheme:      mgr.GetScheme(),
+		recorder:    mgr.GetEventRecorderFor(controllerName),
+		opt:         options.GetOptions(),
 	}
 }
 
@@ -128,9 +130,11 @@ var _ reconcile.Reconciler = &ReconcileMysqlCluster{}
 // ReconcileMysqlCluster reconciles a MysqlCluster object
 type ReconcileMysqlCluster struct {
 	client.Client
-	scheme   *runtime.Scheme
-	recorder record.EventRecorder
-	opt      *options.Options
+
+	kleventCtrl *klevent.Controller
+	scheme      *runtime.Scheme
+	recorder    record.EventRecorder
+	opt         *options.Options
 }
 
 // Automatically generate RBAC rules to allow the Controller to read and write Deployments
@@ -160,6 +164,21 @@ func (r *ReconcileMysqlCluster) Reconcile(ctx context.Context, request reconcile
 	// nolint: govet
 	log := log.WithValues("key", request.NamespacedName)
 	log.V(1).Info("reconcile cluster")
+
+	if ev, found := klevent.NewEventMeta(&cluster.ObjectMeta); found {
+		log.Info("active kuberlogic event found: %v", ev)
+		handled, err := r.kleventCtrl.HandleEvent(ev)
+		if err != nil {
+			log.Error(err, "error handling event %v", err)
+		}
+
+		if handled {
+			log.Info("succesfully handled event %v", ev)
+			return reconcile.Result{}, err
+		}
+	} else {
+		log.Info("no active events found")
+	}
 
 	// run upgrades
 	// TODO: this should be removed in next version (v0.5)
