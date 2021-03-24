@@ -4,6 +4,11 @@
 
 FROM golang:1.16.0 as builder
 
+ADD data/ssh-config /root/.ssh/config
+ADD data/git-config /root/.gitconfig
+ADD data/.github.key /root/.ssh/id_rsa
+RUN chmod 600 /root/.ssh/id_rsa
+
 # Copy in the go src
 WORKDIR /go/src/github.com/presslabs/mysql-operator
 COPY pkg/    pkg/

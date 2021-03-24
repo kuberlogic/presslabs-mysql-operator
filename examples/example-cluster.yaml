@@ -28,7 +28,7 @@ spec:
   # serverIDOffset: 100
 
   ## Configs that will be added to my.cnf for cluster
-  mysqlConf:
+  # mysqlConf:
   #   innodb-buffer-size: 128M
 
 
