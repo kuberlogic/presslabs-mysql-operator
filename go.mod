@@ -11,6 +11,7 @@ require (
 	github.com/go-test/deep v1.0.7
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/imdario/mergo v0.3.12
+	github.com/kuberlogic/operator/modules/klevent v0.1.0
 	github.com/onsi/ginkgo v1.15.0
 	github.com/onsi/gomega v1.10.5
 	github.com/presslabs/controller-util v0.3.0-alpha.2
@@ -28,6 +29,5 @@ require (
 	k8s.io/klog v1.0.0
 	k8s.io/klog/v2 v2.6.0
 	sigs.k8s.io/controller-runtime v0.8.3
-	sigs.k8s.io/controller-tools v0.5.0 // indirect
 	sigs.k8s.io/testing_frameworks v0.1.2
 )
