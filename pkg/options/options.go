@@ -108,7 +108,7 @@ func newPullPolicyValue(defaultValue corev1.PullPolicy, v *corev1.PullPolicy) *p
 }
 
 const (
-	defaultExporterImage = "prom/mysqld-exporter:v0.11.0"
+	defaultExporterImage = "quay.io/kuberlogic/mysqld-exporter:v0.12.1"
 
 	defaultImagePullPolicy     = corev1.PullIfNotPresent
 	defaultImagePullSecretName = ""
