@@ -40,7 +40,7 @@ func NewHealthySVCSyncer(c client.Client, scheme *runtime.Scheme, cluster *mysql
 		service.Labels = cluster.GetLabels()
 		service.Labels["mysql.presslabs.org/service-type"] = "ready-nodes"
 
-		service.Spec.Type = "LoadBalancer"
+		service.Spec.Type = "ClusterIP"
 		service.Spec.Selector = cluster.GetSelectorLabels()
 		service.Spec.Selector["healthy"] = "yes"
 

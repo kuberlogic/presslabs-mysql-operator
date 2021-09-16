@@ -49,6 +49,8 @@ func NewHealthyReplicasSVCSyncer(c client.Client, scheme *runtime.Scheme, cluste
 			service.Spec.Ports = make([]core.ServicePort, 2)
 		}
 
+		service.Spec.Type = "LoadBalancer"
+
 		service.Spec.Ports[0].Name = MysqlPortName
 		service.Spec.Ports[0].Port = MysqlPort
 		service.Spec.Ports[0].TargetPort = TargetPort
